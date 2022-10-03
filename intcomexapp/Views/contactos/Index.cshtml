@@ -1,0 +1,161 @@
+@model intcomexapp.Models.Contacto
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="text-center">Index contactos</h2>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border">
+            <div class="card-header">
+                <h3 class="text-center">Informacion de contacto</h3>
+            </div>
+            <div class="card-body">            
+                <form asp-controller="Contactos" asp-action="Crear" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mb-1">
+                        <label asp-for="codigoCliente" class="col-sm-7 control-form-label"></label>                        
+                        <div class="col-sm-5">
+                            <input asp-for="codigoCliente" readonly class="form-control"/>
+                            <span asp-validation-for="codigoCliente" class="text-danger"></span>                            
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <label asp-for="usuario" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input id="usuario" asp-for="usuario" class="form-control" onchange="validaUsuario()"/>
+                            <span asp-validation-for="usuario" class="text-danger"></span>                            
+                        </div>                        
+                    </div>
+
+                    <div class="row mb-1">
+                        <label asp-for="nombre" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input asp-for="nombre" class="form-control" maxlength="15" minlength="6"/>
+                            <span asp-validation-for="nombre" class="text-danger"></span>                            
+                        </div>                        
+                    </div>
+
+                    <div class="row mb-1">
+                        <label asp-for="cargo" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input asp-for="cargo" class="form-control" axlength="10" minlength="6"/>
+                            <span asp-validation-for="cargo" class="text-danger"></span>                            
+                        </div>                        
+                    </div>                  
+
+                    <div class="row mb-1">
+                        <label asp-for="telefono" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input id="telefono" asp-for="telefono" class="form-control" onchange="validaTelefono()"/>
+                            <span asp-validation-for="telefono" class="text-danger"></span>                            
+                        </div>                        
+                    </div>                  
+
+                    <div class="row mb-1">
+                        <label asp-for="email" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input asp-for="email" class="form-control" />
+                            <span asp-validation-for="email" class="text-danger"></span>                            
+                        </div>                        
+                    </div>                  
+
+                    <div class="row mb-1">
+                        <label asp-for="celular" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            <input asp-for="celular" class="form-control" />
+                            <span asp-validation-for="celular" class="text-danger"></span>                            
+                        </div>                        
+                    </div>                  
+
+                    <div class="row mb-1">
+                        <label asp-for="tipoContacto" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">                            
+                            @{
+                                var options = new SelectList(ViewBag.tipos, "value", "text");
+                                @Html.DropDownList("tipoContacto", options, new {@class="form-control"});
+                            }
+                            <span asp-validation-for="tipoContacto" class="text-danger"></span>                            
+                        </div>                        
+                    </div>   
+
+                     <div class="row mb-1">
+                        <label asp-for="autorizaWebStore" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            @Html.CheckBoxFor(m => m.autorizaWebStore, new{@checked=false }) 
+                            <span asp-validation-for="autorizaWebStore" class="text-danger"></span>                            
+                        </div>                        
+                    </div> 
+
+                     <div class="row mb-1">
+                        <label asp-for="autorizaCrearOrdenes" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            @Html.CheckBoxFor(m => m.autorizaCrearOrdenes, new{@checked=true })  
+                            <span asp-validation-for="autorizaCrearOrdenes" class="text-danger"></span>                            
+                        </div>                        
+                    </div> 
+
+                     <div class="row mb-3">
+                        <label asp-for="envioInformacion" class="col-sm-7 control-form-label"></label>                                                
+                        <div class="col-sm-5">
+                            @Html.CheckBoxFor(m => m.envioInformacion, new{@checked=true })    
+                            <span asp-validation-for="envioInformacion" class="text-danger"></span>                            
+                        </div>                        
+                    </div>      
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success">Aceptar</button>
+                        <button type="reset" class="btn btn-success">Cancelar</button>
+                    </div>                              
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    function validaUsuario(){
+        var valor = document.getElementById("usuario").value;
+
+        var base = valor.substr(0,3);
+
+        if(base === "XMX"){
+            if(valor.length > 6){
+                document.getElementById("usuario").value = valor.substr(0,6);
+            }else{
+                return true;
+            }            
+        }else{
+            document.getElementById("usuario").value = "XMX" + base ;
+        }
+
+    }
+
+    function validaTelefono(){
+        var valor = document.getElementById("telefono").value;
+
+        var base = valor.substr(0,3);
+
+        if(valor === ""){
+            return true;
+        }
+
+        if(base === "+57"){
+            if(valor.length > 10){
+                document.getElementById("telefono").value = valor.substr(0,10);
+            }else{
+                return true;
+            }            
+        }else{
+            document.getElementById("telefono").value = "+57" + base ;
+        }
+
+    }
+
+
+</script>
+
